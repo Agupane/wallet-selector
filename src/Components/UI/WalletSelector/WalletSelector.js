@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
-import Web3 from 'web3'
+import metamaskProvider from '../../Hoc/Web3Provider/MetamaskProvider'
+import logdown from 'logdown'
+const logger = logdown('WalletSelector:MetamaskProvider')
+logger.state.isEnabled = process.env.NODE_ENV !== 'production'
 
 const supportedWallets = {
   METAMASK: 'metamask',
@@ -17,7 +20,14 @@ class WalletSelector extends Component {
     console.log('wallet selected ', walletType)
     switch (walletType) {
       case supportedWallets.METAMASK: {
-        await this.metamaskProvider.connect((web3, userData) => {}, error => {})
+        await metamaskProvider.connect(
+          (web3, userData) => {
+            logger.log('User has been connected with web3 instance: ', web3)
+          },
+          error => {
+            logger.log('There was an error while trying to connect with metamask ', error)
+          }
+        )
         break
       }
       case supportedWallets.LEDGER: {
