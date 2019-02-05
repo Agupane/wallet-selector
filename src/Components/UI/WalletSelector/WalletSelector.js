@@ -17,12 +17,16 @@ class WalletSelector extends Component {
   }
 
   selectWallet = async walletType => {
-    console.log('wallet selected ', walletType)
+    console.log('Wallet selected ', walletType)
     switch (walletType) {
       case supportedWallets.METAMASK: {
         await metamaskProvider.connect(
           (web3, userData) => {
             logger.log('User has been connected with web3 instance: ', web3)
+            logger.log('User has the following data: ', userData)
+          },
+          userData => {
+            logger.log('User data updated: ', userData)
           },
           error => {
             logger.log('There was an error while trying to connect with metamask ', error)

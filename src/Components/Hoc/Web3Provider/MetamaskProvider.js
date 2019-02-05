@@ -4,19 +4,31 @@ const logger = logdown('WalletSelector:MetamaskProvider')
 logger.state.isEnabled = process.env.NODE_ENV !== 'production'
 
 const metamaskProvider = {
-  connect: async () => {
-    console.log('Connected')
+  connect: async (cbSuccess, cbDataUpdated, cbError) => {
+    console.log('Connecting with web3')
     let web3Instance
     let userData
     try {
       /** We get web3 instance **/
       web3Instance = await loadWeb3()
-      console.log('web3 instance ', web3Instance)
       /** Once we got the web3 instance we need to get the user data **/
       userData = await loadUserDataFromWeb3(web3Instance)
-      console.log('User dataaa', userData)
+      /** We subscribe to the event that detects if the user has changed the account **/
+      accountChangedSubscription(web3Instance, userData, updatedUserData => {
+        logger.log('Executing update of user data for account changes')
+        userData = updatedUserData
+        cbDataUpdated(userData)
+      })
+      /** We subscribe to the event that detects if the user has changed the network **/
+      networkChangedSubscription(web3Instance, userData, updatedUserData => {
+        logger.log('Executing update of user data for network changes')
+        userData = updatedUserData
+        cbDataUpdated(userData)
+      })
+      /** We finally call the success callback with the data **/
+      cbSuccess(web3Instance, userData)
     } catch (error) {
-      console.log(error)
+      cbError(error)
     }
   }
 }
@@ -63,8 +75,12 @@ const loadWeb3Legacy = async () => {
   return new Web3(web3.currentProvider)
 }
 
+/** Returns balance, address, network of the user **/
 const loadUserDataFromWeb3 = async web3Instance => {
   logger.log('Loading user data from web3')
+  if (!web3Instance) {
+    return
+  }
   let userData = {
     authenticated: null,
     address: '',
@@ -72,15 +88,13 @@ const loadUserDataFromWeb3 = async web3Instance => {
     ethBalance: ''
   }
   let { eth } = web3Instance
-  let { ethereum } = window
   let userAddress
   let userNetwork
   try {
     let results = await Promise.all([eth.getAccounts(), eth.net.getId()])
     userAddress = results[0]
     userNetwork = results[1]
-    logger.log('User address', userAddress)
-    logger.log('User network ', userNetwork)
+    logger.log('User address', userAddress, ' User network:', userNetwork)
     /** Once we got the user data, we check if he has an address, otherwise we should throw an error **/
     if (userAddress.length !== 0) {
       let balance = await getUserBalanceInEth(web3Instance, userAddress[0])
@@ -92,28 +106,6 @@ const loadUserDataFromWeb3 = async web3Instance => {
         currentNetwork: userNetwork,
         ethBalance: balance
       }
-
-      /** We subscribe to the event that detects if the user has changed the account **/
-      ethereum.on('accountsChanged', async accounts => {
-        logger.log('Account Changed ', accounts)
-        let balance = await getUserBalanceInEth(web3Instance, accounts[0])
-        userData = {
-          ...userData,
-          ethBalance: balance
-        }
-      })
-
-      /** We subscribe to the event that detects if the user has changed the network **/
-      ethereum.on('networkChanged', async network => {
-        logger.log('Network changed ', network)
-        let balance = await getUserBalanceInEth(web3Instance, userData.address)
-        userData = {
-          ...userData,
-          currentNetwork: network,
-          ethBalance: balance
-        }
-      })
-
       return userData
     } else {
       throw new Error('User does not have an address')
@@ -126,6 +118,9 @@ const loadUserDataFromWeb3 = async web3Instance => {
 /** Converts the address from uppercase to lowercase (checksum format) in order to avoid metamask bug of using both address **/
 const toChecksumAddress = (web3, address) => {
   let checksumAddress = '0x'
+  if (!web3 || !address) {
+    return
+  }
   address = address.toLowerCase().replace('0x', '')
 
   // creates the case map using the binary form of the hash of the address
@@ -143,6 +138,7 @@ const toChecksumAddress = (web3, address) => {
   return checksumAddress
 }
 
+/** Returns the user balance in ETH **/
 const getUserBalanceInEth = async (web3Instance, address) => {
   let balance = 0
   if (web3Instance && address) {
@@ -150,6 +146,45 @@ const getUserBalanceInEth = async (web3Instance, address) => {
     balance = web3Instance.utils.fromWei(balance, 'ether')
   }
   return balance
+}
+
+/** Event to detect if user has changed the account **/
+const accountChangedSubscription = async (web3Instance, userData, onChangeCb) => {
+  const { ethereum } = window
+  if (!web3Instance || !userData || onChangeCb) {
+    return
+  }
+  ethereum.on('accountsChanged', async accounts => {
+    logger.log('Account Changed ', accounts)
+    let balance = await getUserBalanceInEth(web3Instance, accounts[0])
+    let userAddress = toChecksumAddress(web3Instance, accounts[0])
+    userData = {
+      ...userData,
+      address: userAddress,
+      ethBalance: balance
+    }
+    onChangeCb(userData)
+  })
+  return userData
+}
+
+/** Event to detect if user has changed the network **/
+const networkChangedSubscription = async (web3Instance, userData, onChangeCb) => {
+  const { ethereum } = window
+  if (!web3Instance || !userData || onChangeCb) {
+    return
+  }
+  ethereum.on('networkChanged', async network => {
+    logger.log('Network changed ', network)
+    let balance = await getUserBalanceInEth(web3Instance, userData.address)
+    userData = {
+      ...userData,
+      currentNetwork: network,
+      ethBalance: balance
+    }
+    onChangeCb(userData)
+  })
+  return userData
 }
 
 export default metamaskProvider
