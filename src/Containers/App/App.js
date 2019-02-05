@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
 import './App.css'
-import WalletSelector from './Components/UI/WalletSelector/WalletSelector'
+import { Switch, Route } from 'react-router-dom'
+import { HomePage } from '../Home/Home'
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <WalletSelector />
-        </header>
+        <Switch>
+          <Route exact path="/" component={HomePage} />
+        </Switch>
       </div>
     )
   }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import metamaskProvider from '../../Hoc/Web3Provider/MetamaskProvider'
+import metamaskProvider from '../../../Utils/Web3Provider/MetamaskProvider'
 import logdown from 'logdown'
 const logger = logdown('WalletSelector:MetamaskProvider')
 logger.state.isEnabled = process.env.NODE_ENV !== 'production'
