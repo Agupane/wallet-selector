@@ -137,7 +137,7 @@ const getUserBalanceInEth = async (web3Instance, address) => {
 /** Event to detect if user has changed the account **/
 const accountChangedSubscription = async (web3Instance, userData, onChangeCb) => {
   const { ethereum } = window
-  if (!web3Instance || !userData || onChangeCb) {
+  if (!web3Instance || !userData || !onChangeCb) {
     return
   }
   ethereum.on('accountsChanged', async accounts => {
@@ -157,7 +157,7 @@ const accountChangedSubscription = async (web3Instance, userData, onChangeCb) =>
 /** Event to detect if user has changed the network **/
 const networkChangedSubscription = async (web3Instance, userData, onChangeCb) => {
   const { ethereum } = window
-  if (!web3Instance || !userData || onChangeCb) {
+  if (!web3Instance || !userData || !onChangeCb) {
     return
   }
   ethereum.on('networkChanged', async network => {
