@@ -7,7 +7,6 @@
 import React, { Component } from 'react'
 import WalletSelector from '../../Components/UI/WalletSelector/WalletSelector'
 
-/* eslint-disable react/prefer-stateless-function */
 export class HomePage extends Component {
   render() {
     return (

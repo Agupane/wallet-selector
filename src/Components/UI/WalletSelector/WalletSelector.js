@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import metamaskProvider from '../../../Utils/Web3Provider/MetamaskProvider'
 import logdown from 'logdown'
+import { withRouter } from 'react-router-dom'
 const logger = logdown('WalletSelector:MetamaskProvider')
 logger.state.isEnabled = process.env.NODE_ENV !== 'production'
 
@@ -74,6 +75,7 @@ class WalletSelector extends Component {
         /** TODO -- Implement routing or redux state update **/
         if (success) {
           console.log('Authentication successful')
+          this.props.history.push('/dashboard')
         } else {
           console.error('Authentication failed')
         }
@@ -105,4 +107,4 @@ class WalletSelector extends Component {
   }
 }
 
-export default WalletSelector
+export default withRouter(WalletSelector)
