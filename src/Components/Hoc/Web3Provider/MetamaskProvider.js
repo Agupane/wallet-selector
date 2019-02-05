@@ -5,7 +5,6 @@ logger.state.isEnabled = process.env.NODE_ENV !== 'production'
 
 const metamaskProvider = {
   connect: async (cbSuccess, cbDataUpdated, cbError) => {
-    console.log('Connecting with web3')
     let web3Instance
     let userData
     try {

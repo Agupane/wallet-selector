@@ -7,9 +7,7 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <p>
-            <WalletSelector />
-          </p>
+          <WalletSelector />
         </header>
       </div>
     )
