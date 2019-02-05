@@ -29,16 +29,18 @@ class WalletSelector extends Component {
             logger.log('User data updated: ', userData)
           },
           error => {
-            logger.log('There was an error while trying to connect with metamask ', error)
+            logger.error(error)
             this.finishAuthentication(false)
           }
         )
         break
       }
       case supportedWallets.LEDGER: {
+        this.finishAuthentication(false)
         break
       }
       case supportedWallets.TREZOR: {
+        this.finishAuthentication(false)
         break
       }
       default: {
@@ -73,7 +75,7 @@ class WalletSelector extends Component {
         if (success) {
           console.log('Authentication successful')
         } else {
-          console.log('Authentication failed')
+          console.error('Authentication failed')
         }
       }
     )
