@@ -7,7 +7,7 @@
 import React, { Component } from 'react'
 import WalletSelector from '../../Components/UI/WalletSelector/WalletSelector'
 
-export class HomePage extends Component {
+class HomePage extends Component {
   render() {
     return (
       <>

@@ -75,7 +75,7 @@ class WalletSelector extends Component {
         /** TODO -- Implement routing or redux state update **/
         if (success) {
           console.log('Authentication successful')
-          //   this.props.history.push('/dashboard')
+          this.props.history.push('/dashboard')
         } else {
           console.error('Authentication failed')
         }
