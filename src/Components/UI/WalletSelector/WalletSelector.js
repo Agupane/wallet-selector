@@ -3,7 +3,6 @@ import metamaskProvider from '../../../Utils/Web3Provider/MetamaskProvider'
 import logdown from 'logdown'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import * as actionTypes from '../../../Redux/Actions/web3Actions'
 import * as actionCreators from '../../../Redux/Actions/web3Actions'
 const logger = logdown('WalletSelector:MetamaskProvider')
 logger.state.isEnabled = process.env.NODE_ENV !== 'production'

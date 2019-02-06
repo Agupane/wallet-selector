@@ -1,7 +1,4 @@
-import logdown from 'logdown'
 import * as actionTypes from '../Actions/web3Actions'
-const logger = logdown('WalletSelector:Web3Reducer')
-logger.state.isEnabled = process.env.NODE_ENV !== 'production'
 
 const INITIAL_STATE = {
   web3: {},
@@ -21,7 +18,6 @@ const web3Reducer = (state = INITIAL_STATE, action) => {
   if (!action) {
     return state
   }
-  logger.log('Dispatching action: ', action.type)
   switch (action.type) {
     case actionTypes.SET_USER_ACCOUNT_DATA: {
       if (!action.payload) {
