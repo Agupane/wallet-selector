@@ -1,6 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import rootReducer from '../Reducers/index'
 import logdown from 'logdown'
+import thunk from 'redux-thunk'
 
 /** Enables redux dev tools on chrome **/
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
@@ -28,4 +29,7 @@ const loggerMiddleware = store => {
   }
 }
 
-export const store = createStore(rootReducer, composeEnhancers(applyMiddleware(loggerMiddleware)))
+export const store = createStore(
+  rootReducer,
+  composeEnhancers(applyMiddleware(loggerMiddleware, thunk))
+)
