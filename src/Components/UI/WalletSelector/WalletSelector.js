@@ -4,6 +4,7 @@ import logdown from 'logdown'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import * as actionTypes from '../../../Redux/Actions/web3Actions'
+import * as actionCreators from '../../../Redux/Actions/web3Actions'
 const logger = logdown('WalletSelector:MetamaskProvider')
 logger.state.isEnabled = process.env.NODE_ENV !== 'production'
 
@@ -93,6 +94,7 @@ class WalletSelector extends Component {
       this.props.setWeb3Instance(web3)
     }
     if (userData) {
+      console.log('setting user account data')
       this.props.setUserAccountData(userData)
     }
   }
@@ -124,10 +126,8 @@ class WalletSelector extends Component {
 /** Which actions are executable in this component **/
 const mapDispatchToProps = dispatch => {
   return {
-    setUserAccountData: userData =>
-      dispatch({ type: actionTypes.SET_USER_ACCOUNT_DATA, payload: userData }),
-    setWeb3Instance: web3Instance =>
-      dispatch({ type: actionTypes.SET_WEB3_INSTANCE, payload: web3Instance })
+    setWeb3Instance: web3Instance => dispatch(actionCreators.setWeb3Instance(web3Instance)),
+    setUserAccountData: userData => dispatch(actionCreators.setUserAccountData(userData))
   }
 }
 
