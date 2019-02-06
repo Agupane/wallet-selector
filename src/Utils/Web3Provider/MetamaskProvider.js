@@ -1,6 +1,8 @@
 import Web3 from 'web3'
 import logdown from 'logdown'
+import * as web3Errors from './Web3Errors'
 const logger = logdown('WalletSelector:MetamaskProvider')
+
 logger.state.isEnabled = process.env.NODE_ENV !== 'production'
 
 const metamaskProvider = {
@@ -45,7 +47,7 @@ const loadWeb3 = async () => {
   } else {
     /** The user does not have web3 **/
     logger.log('User does not have web3')
-    throw new Error('User does not have web3')
+    throw new Error(web3Errors.NO_WEB3)
   }
 }
 
@@ -64,7 +66,7 @@ const loadWeb3LastVersion = async () => {
   } catch (error) {
     /** The user denied the app, it's not authenticated **/
     logger.log('User with ethereum denied the access')
-    throw new Error('User with ethereum denied the access')
+    throw new Error(web3Errors.NO_PERMISSIONS)
   }
 }
 
@@ -107,7 +109,7 @@ const loadUserDataFromWeb3 = async web3Instance => {
       }
       return userData
     } else {
-      throw new Error('User does not have an address')
+      throw new Error(web3Errors.NO_ADDRESS)
     }
   } catch (error) {
     throw error

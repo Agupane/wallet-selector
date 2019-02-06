@@ -1,0 +1,5 @@
+export const NO_WEB3 = 'User does not have web3'
+export const NO_PERMISSIONS = 'User denied the access to web3 account'
+export const WRONG_NETWORK = 'The user has a wrong network selected'
+export const NO_ADDRESS = 'The user does not have address or the address is invalid'
+export const NO_REASON = 'Something went wrong!'
