@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 const logger = logdown('WalletSelector:MetamaskProvider')
 logger.state.isEnabled = process.env.NODE_ENV !== 'production'
+import * as actionTypes from '../../../Redux/Actions/web3Actions'
 
 const supportedWallets = {
   METAMASK: 'metamask',
@@ -114,8 +115,10 @@ class WalletSelector extends Component {
 /** Which actions are executable in this component **/
 const mapDispatchToProps = dispatch => {
   return {
-    setUserAccountData: userData => dispatch({ type: 'SET_USER_ACCOUNT_DATA', payload: userData }),
-    setWeb3Instance: web3Instance => dispatch({ type: 'SET_WEB3_INSTANCE', payload: web3Instance })
+    setUserAccountData: userData =>
+      dispatch({ type: actionTypes.SET_USER_ACCOUNT_DATA, payload: userData }),
+    setWeb3Instance: web3Instance =>
+      dispatch({ type: actionTypes.SET_WEB3_INSTANCE, payload: web3Instance })
   }
 }
 
