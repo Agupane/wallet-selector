@@ -7,12 +7,11 @@ logger.state.isEnabled = process.env.NODE_ENV !== 'production'
 
 class DashboardPage extends Component {
   backToHome = () => {
-    console.log('getting user data ', this.props.userData)
     this.props.history.push('/')
   }
 
   componentDidMount() {
-    logger.log('[ComponentDidMount] with props: ', this.props)
+    logger.log('[ComponentDidMount]')
   }
 
   render() {

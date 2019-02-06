@@ -1,4 +1,5 @@
 import * as actionTypes from '../Actions/web3Actions'
+import { updateObject } from '../../Utils/reduxUtilitys'
 
 const INITIAL_STATE = {
   web3: {},
@@ -23,19 +24,17 @@ const web3Reducer = (state = INITIAL_STATE, action) => {
       if (!action.payload) {
         return state
       }
-      return {
-        ...state,
+      return updateObject(state, {
         userData: action.payload
-      }
+      })
     }
     case actionTypes.SET_WEB3_INSTANCE: {
       if (!action.payload) {
         return state
       }
-      return {
-        ...state,
+      return updateObject(state, {
         web3: action.payload
-      }
+      })
     }
     default: {
       return state
