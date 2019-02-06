@@ -27,6 +27,7 @@ class WalletSelector extends Component {
             logger.log('User has the following data: ', userData)
             this.finishAuthentication(true, () => {
               this.updateReduxState(web3, userData)
+              this.props.history.push('/dashboard')
             })
           },
           userData => {
@@ -67,7 +68,7 @@ class WalletSelector extends Component {
     )
   }
 
-  finishAuthentication = (success, callbackSuccess) => {
+  finishAuthentication = (success, callback) => {
     logger.log('Finished authentication with success: ', success)
     this.setState(
       {
@@ -76,12 +77,11 @@ class WalletSelector extends Component {
       () => {
         if (success) {
           console.log('Authentication successful')
-          if (callbackSuccess) {
-            callbackSuccess()
-          }
-          this.props.history.push('/dashboard')
         } else {
           console.error('Authentication failed')
+        }
+        if (callback) {
+          callback()
         }
       }
     )
