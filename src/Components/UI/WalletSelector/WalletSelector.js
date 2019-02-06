@@ -3,9 +3,9 @@ import metamaskProvider from '../../../Utils/Web3Provider/MetamaskProvider'
 import logdown from 'logdown'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
+import * as actionTypes from '../../../Redux/Actions/web3Actions'
 const logger = logdown('WalletSelector:MetamaskProvider')
 logger.state.isEnabled = process.env.NODE_ENV !== 'production'
-import * as actionTypes from '../../../Redux/Actions/web3Actions'
 
 const supportedWallets = {
   METAMASK: 'metamask',
@@ -15,9 +15,7 @@ const supportedWallets = {
 
 class WalletSelector extends Component {
   state = {
-    authenticating: false,
-    web3: null,
-    userData: null
+    authenticating: false
   }
 
   selectWallet = async walletType => {
@@ -27,12 +25,13 @@ class WalletSelector extends Component {
           (web3, userData) => {
             logger.log('User has been connected with web3 instance: ', web3)
             logger.log('User has the following data: ', userData)
-            this.props.setWeb3Instance(web3)
-            this.props.setUserAccountData(userData)
-            this.finishAuthentication(true)
+            this.finishAuthentication(true, () => {
+              this.updateReduxState(web3, userData)
+            })
           },
           userData => {
             logger.log('User data updated: ', userData)
+            this.updateReduxState(null, userData)
           },
           error => {
             logger.error(error)
@@ -60,7 +59,6 @@ class WalletSelector extends Component {
     logger.log('Starting authentication with wallet: ', walletType)
     this.setState(
       {
-        ...this.state,
         authenticating: true
       },
       () => {
@@ -69,23 +67,34 @@ class WalletSelector extends Component {
     )
   }
 
-  finishAuthentication = success => {
+  finishAuthentication = (success, callbackSuccess) => {
     logger.log('Finished authentication with success: ', success)
     this.setState(
       {
-        ...this.state,
         authenticating: false
       },
       () => {
-        /** TODO -- Implement routing or redux state update **/
         if (success) {
           console.log('Authentication successful')
+          if (callbackSuccess) {
+            callbackSuccess()
+          }
           this.props.history.push('/dashboard')
         } else {
           console.error('Authentication failed')
         }
       }
     )
+  }
+
+  updateReduxState = (web3, userData) => {
+    logger.log('Updating redux state')
+    if (web3) {
+      this.props.setWeb3Instance(web3)
+    }
+    if (userData) {
+      this.props.setUserAccountData(userData)
+    }
   }
 
   render() {

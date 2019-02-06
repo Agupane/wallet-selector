@@ -1,7 +1,7 @@
 import logdown from 'logdown'
+import * as actionTypes from '../Actions/web3Actions'
 const logger = logdown('WalletSelector:Web3Reducer')
 logger.state.isEnabled = process.env.NODE_ENV !== 'production'
-import * as actionTypes from '../Actions/web3Actions'
 
 const INITIAL_STATE = {
   web3: {},
