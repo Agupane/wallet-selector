@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import metamaskProvider from '../../../Utils/Web3Provider/MetamaskProvider'
 import logdown from 'logdown'
 import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
 const logger = logdown('WalletSelector:MetamaskProvider')
 logger.state.isEnabled = process.env.NODE_ENV !== 'production'
 
@@ -14,7 +15,8 @@ const supportedWallets = {
 class WalletSelector extends Component {
   state = {
     authenticating: false,
-    web3: null
+    web3: null,
+    userData: null
   }
 
   selectWallet = async walletType => {
@@ -24,6 +26,8 @@ class WalletSelector extends Component {
           (web3, userData) => {
             logger.log('User has been connected with web3 instance: ', web3)
             logger.log('User has the following data: ', userData)
+            this.props.setWeb3Instance(web3)
+            this.props.setUserAccountData(userData)
             this.finishAuthentication(true)
           },
           userData => {
@@ -107,4 +111,15 @@ class WalletSelector extends Component {
   }
 }
 
-export default withRouter(WalletSelector)
+/** Which actions are executable in this component **/
+const mapDispatchToProps = dispatch => {
+  return {
+    setUserAccountData: userData => dispatch({ type: 'SET_USER_ACCOUNT_DATA', payload: userData }),
+    setWeb3Instance: web3Instance => dispatch({ type: 'SET_WEB3_INSTANCE', payload: web3Instance })
+  }
+}
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(withRouter(WalletSelector))

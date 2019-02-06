@@ -7,8 +7,8 @@ logger.state.isEnabled = process.env.NODE_ENV !== 'production'
 
 class DashboardPage extends Component {
   backToHome = () => {
-    console.log('getting user data ', this.props.getUserAccountData())
-    // this.props.history.push('/')
+    console.log('getting user data ', this.props.userData)
+    this.props.history.push('/')
   }
 
   componentDidMount() {
@@ -31,18 +31,9 @@ class DashboardPage extends Component {
 const mapStateToProps = state => {
   const { web3Store } = state
   return {
-    web3: web3Store.web3
+    web3: web3Store.web3,
+    userData: web3Store.userData
   }
 }
 
-/** Which actions are executable in this component **/
-const mapDispatchToProps = dispatch => {
-  return {
-    getUserAccountData: () => dispatch({ type: 'GET_USER_ACCOUNT_DATA' })
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(DashboardPage))
+export default connect(mapStateToProps)(withRouter(DashboardPage))
