@@ -1,4 +1,4 @@
-import * as actionTypes from '../Actions/delegatesActionsTypes'
+import * as actionTypes from '../Actions/ActionTypes/delegatesActionsTypes'
 import { updateObject } from '../../Utils/reduxUtilitys'
 
 const INITIAL_STATE = {

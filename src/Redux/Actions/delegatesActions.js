@@ -1,4 +1,5 @@
-import * as actionTypes from './delegatesActionsTypes'
+import * as actionTypes from './ActionTypes/delegatesActionsTypes'
+import axios from '../../Utils/axios/axios-backend'
 
 export const fetchDelegatesSuccess = delegates => {
   return {
@@ -9,8 +10,8 @@ export const fetchDelegatesSuccess = delegates => {
 
 export const fetchDelegatesFail = error => {
   return {
-    payload: actionTypes.FETCH_DELEGATES_FAIL,
-    error: error
+    type: actionTypes.FETCH_DELEGATES_FAIL,
+    payload: error
   }
 }
 
@@ -21,28 +22,13 @@ export const fetchDelegatesStart = () => {
 }
 
 export const fetchDelegates = () => {
-  return dispatch => {
+  return async dispatch => {
     dispatch(fetchDelegatesStart())
     /** Here we should call API with axios **/
     try {
-      // let delegates = await axios.get('/delegates')
-      /** example: ** - TODO DELETE **/
-      setTimeout(() => {
-        console.log('Fetching of delegates finished')
-        let delegates = [
-          {
-            address: '123',
-            delegateAddress: '123',
-            stakedLPT: '100000'
-          },
-          {
-            address: '456',
-            delegateAddress: '456',
-            stakedLPT: '1'
-          }
-        ]
-        dispatch(fetchDelegatesSuccess(delegates))
-      }, 1000)
+      let delegates = await axios.get('/delegates.json')
+      console.log('result aaaaa ', delegates)
+      dispatch(fetchDelegatesSuccess(delegates))
     } catch (err) {
       dispatch(fetchDelegatesFail(err))
     }

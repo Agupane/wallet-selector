@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import logdown from 'logdown'
 import DelegatesList from '../../Components/DelegatesList/DelegatesList'
+import Auth from '../Auth/Auth'
 
 const logger = logdown('WalletSelector:Dashboard')
 logger.state.isEnabled = process.env.NODE_ENV !== 'production'
@@ -19,6 +20,7 @@ const dashboardPage = props => {
         Back to home
       </button>
       <DelegatesList />
+      <Auth />
     </>
   )
 }
