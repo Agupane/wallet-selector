@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import metamaskProvider from '../../../Utils/Web3Provider/MetamaskProvider'
+import metamaskProvider from '../../Utils/Web3Provider/MetamaskProvider'
 import logdown from 'logdown'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import * as actionCreators from '../../../Redux/Actions/web3Actions'
+import * as actionCreators from '../../Redux/Actions/web3Actions'
+import Spinner from '../Common/UI/Spinner/Spinner'
 const logger = logdown('WalletSelector:MetamaskProvider')
 logger.state.isEnabled = process.env.NODE_ENV !== 'production'
 
@@ -99,7 +100,7 @@ class WalletSelector extends Component {
   }
 
   render() {
-    let content = <h3>Loading your account</h3>
+    let content = <Spinner />
     if (!this.state.authenticating) {
       content = (
         <>

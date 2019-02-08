@@ -1,27 +1,13 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import logdown from 'logdown'
+import DelegatesList from '../../Components/DelegatesList/DelegatesList'
+
 const logger = logdown('WalletSelector:Dashboard')
 logger.state.isEnabled = process.env.NODE_ENV !== 'production'
 
 const dashboardPage = props => {
-  /** Gets called whenever the userData props change **/
-  useEffect(() => {
-    console.log('Use effect with props ', props)
-    /** React hook - we could use side-effects here **/
-  }, [props.userData])
-
-  useEffect(() => {
-    console.log('Use effect called the first time as componentDidMount')
-    /** Called when the component will unmount **/
-    return componentWillUnmount
-  }, [])
-
-  const componentWillUnmount = () => {
-    console.log('Component cleanup')
-  }
-
   const backToHome = () => {
     props.history.push('/')
   }
@@ -32,6 +18,7 @@ const dashboardPage = props => {
       <button color="primary" onClick={() => backToHome()}>
         Back to home
       </button>
+      <DelegatesList />
     </>
   )
 }
@@ -44,5 +31,6 @@ const mapStateToProps = state => {
     userData: web3Store.userData
   }
 }
+
 /** React memo check if the props did change, in that case the functional component is re rendered **/
 export default connect(mapStateToProps)(withRouter(React.memo(dashboardPage)))
