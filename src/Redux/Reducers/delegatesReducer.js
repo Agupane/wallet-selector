@@ -24,7 +24,9 @@ const delegatesReducer = (state = INITIAL_STATE, action) => {
     }
     case actionTypes.FETCH_DELEGATES_SUCCESS: {
       if (!action.payload) {
-        return state
+        updateObject(state, {
+          loadingDelegates: false
+        })
       }
       return updateObject(state, {
         delegates: action.payload,

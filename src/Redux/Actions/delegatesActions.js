@@ -27,8 +27,7 @@ export const fetchDelegates = () => {
     /** Here we should call API with axios **/
     try {
       let delegates = await axios.get('/delegates.json')
-      console.log('result aaaaa ', delegates)
-      dispatch(fetchDelegatesSuccess(delegates))
+      dispatch(fetchDelegatesSuccess(delegates.data))
     } catch (err) {
       dispatch(fetchDelegatesFail(err))
     }

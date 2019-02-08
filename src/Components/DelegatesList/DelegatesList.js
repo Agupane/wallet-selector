@@ -24,9 +24,7 @@ const delegatesList = props => {
     console.log('Use effect with props ', props)
   }, [props.delegates])
 
-  return props.loadingDelegates ? (
-    <Spinner />
-  ) : (
+  let delegatesListJSX = props.delegates ? (
     <>
       {props.delegates.map((delegate, index) => (
         <div key={index}>
@@ -34,7 +32,9 @@ const delegatesList = props => {
         </div>
       ))}
     </>
-  )
+  ) : null
+
+  return props.loadingDelegates ? <Spinner /> : delegatesListJSX
 }
 
 /** Which values from the global state should be shown on the props of this component **/
