@@ -1,6 +1,8 @@
 import Web3 from 'web3'
 import logdown from 'logdown'
+import * as web3Errors from './Web3Errors'
 const logger = logdown('WalletSelector:MetamaskProvider')
+
 logger.state.isEnabled = process.env.NODE_ENV !== 'production'
 
 const metamaskProvider = {
@@ -45,7 +47,7 @@ const loadWeb3 = async () => {
   } else {
     /** The user does not have web3 **/
     logger.log('User does not have web3')
-    throw new Error('User does not have web3')
+    throw new Error(web3Errors.NO_WEB3)
   }
 }
 
@@ -64,7 +66,7 @@ const loadWeb3LastVersion = async () => {
   } catch (error) {
     /** The user denied the app, it's not authenticated **/
     logger.log('User with ethereum denied the access')
-    throw new Error('User with ethereum denied the access')
+    throw new Error(web3Errors.NO_PERMISSIONS)
   }
 }
 
@@ -107,7 +109,7 @@ const loadUserDataFromWeb3 = async web3Instance => {
       }
       return userData
     } else {
-      throw new Error('User does not have an address')
+      throw new Error(web3Errors.NO_ADDRESS)
     }
   } catch (error) {
     throw error
@@ -116,24 +118,11 @@ const loadUserDataFromWeb3 = async web3Instance => {
 
 /** Converts the address from uppercase to lowercase (checksum format) in order to avoid metamask bug of using both address **/
 const toChecksumAddress = (web3, address) => {
-  let checksumAddress = '0x'
+  let checksumAddress
   if (!web3 || !address) {
     return
   }
-  address = address.toLowerCase().replace('0x', '')
-
-  // creates the case map using the binary form of the hash of the address
-  let caseMap = parseInt(web3.utils.sha3('0x' + address), 16)
-    .toString(2)
-    .substring(0, 40)
-
-  for (let i = 0; i < address.length; i++) {
-    if (caseMap[i] === '1') {
-      checksumAddress += address[i].toUpperCase()
-    } else {
-      checksumAddress += address[i]
-    }
-  }
+  checksumAddress = web3.utils.toChecksumAddress(address)
   return checksumAddress
 }
 
@@ -150,7 +139,7 @@ const getUserBalanceInEth = async (web3Instance, address) => {
 /** Event to detect if user has changed the account **/
 const accountChangedSubscription = async (web3Instance, userData, onChangeCb) => {
   const { ethereum } = window
-  if (!web3Instance || !userData || onChangeCb) {
+  if (!web3Instance || !userData || !onChangeCb) {
     return
   }
   ethereum.on('accountsChanged', async accounts => {
@@ -170,7 +159,7 @@ const accountChangedSubscription = async (web3Instance, userData, onChangeCb) =>
 /** Event to detect if user has changed the network **/
 const networkChangedSubscription = async (web3Instance, userData, onChangeCb) => {
   const { ethereum } = window
-  if (!web3Instance || !userData || onChangeCb) {
+  if (!web3Instance || !userData || !onChangeCb) {
     return
   }
   ethereum.on('networkChanged', async network => {

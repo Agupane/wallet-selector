@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
-import metamaskProvider from '../../Hoc/Web3Provider/MetamaskProvider'
+import metamaskProvider from '../../../Utils/Web3Provider/MetamaskProvider'
 import logdown from 'logdown'
+import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+import * as actionCreators from '../../../Redux/Actions/web3Actions'
 const logger = logdown('WalletSelector:MetamaskProvider')
 logger.state.isEnabled = process.env.NODE_ENV !== 'production'
 
@@ -12,8 +15,7 @@ const supportedWallets = {
 
 class WalletSelector extends Component {
   state = {
-    authenticating: false,
-    web3: null
+    authenticating: false
   }
 
   selectWallet = async walletType => {
@@ -23,10 +25,14 @@ class WalletSelector extends Component {
           (web3, userData) => {
             logger.log('User has been connected with web3 instance: ', web3)
             logger.log('User has the following data: ', userData)
-            this.finishAuthentication(true)
+            this.finishAuthentication(true, () => {
+              this.updateReduxState(web3, userData)
+              this.props.history.push('/dashboard')
+            })
           },
           userData => {
             logger.log('User data updated: ', userData)
+            this.updateReduxState(null, userData)
           },
           error => {
             logger.error(error)
@@ -54,7 +60,6 @@ class WalletSelector extends Component {
     logger.log('Starting authentication with wallet: ', walletType)
     this.setState(
       {
-        ...this.state,
         authenticating: true
       },
       () => {
@@ -63,22 +68,34 @@ class WalletSelector extends Component {
     )
   }
 
-  finishAuthentication = success => {
+  finishAuthentication = (success, callback) => {
     logger.log('Finished authentication with success: ', success)
     this.setState(
       {
-        ...this.state,
         authenticating: false
       },
       () => {
-        /** TODO -- Implement routing or redux state update **/
         if (success) {
           console.log('Authentication successful')
         } else {
           console.error('Authentication failed')
         }
+        if (callback) {
+          callback()
+        }
       }
     )
+  }
+
+  updateReduxState = (web3, userData) => {
+    logger.log('Updating redux state')
+    if (web3) {
+      this.props.setWeb3Instance(web3)
+    }
+    if (userData) {
+      console.log('setting user account data')
+      this.props.setUserAccountData(userData)
+    }
   }
 
   render() {
@@ -105,4 +122,15 @@ class WalletSelector extends Component {
   }
 }
 
-export default WalletSelector
+/** Which actions are executable in this component **/
+const mapDispatchToProps = dispatch => {
+  return {
+    setWeb3Instance: web3Instance => dispatch(actionCreators.setWeb3Instance(web3Instance)),
+    setUserAccountData: userData => dispatch(actionCreators.setUserAccountData(userData))
+  }
+}
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(withRouter(WalletSelector))
