@@ -8,22 +8,17 @@ const logger = logdown('WalletSelector:DelegatesList')
 logger.state.isEnabled = process.env.NODE_ENV !== 'production'
 
 const delegatesList = props => {
-  /** React hook - we SHOULD use side-effects here **/
   useEffect(() => {
-    console.log('Use effect called the first time as componentDidMount')
     /** Delegates list initialization **/
-    props.getDelegatesList()
-    /** Called when the component will unmount **/
-    return () => {
-      console.log('Component cleanup')
-    }
-  }, [])
+    props.getDelegatesList(props.token)
+  }, [props.token])
 
   /** Gets called whenever the list of delegates prop change **/
   useEffect(() => {
     console.log('Use effect with props ', props)
   }, [props.delegates])
 
+  /** TODO -- CHECK LIST EXPLODES **/
   let delegatesListJSX = props.delegates ? (
     <>
       {props.delegates.map((delegate, index) => (
@@ -42,13 +37,14 @@ const mapStateToProps = state => {
   const { delegatesStore } = state
   return {
     delegates: delegatesStore.delegates,
-    loadingDelegates: delegatesStore.loadingDelegates
+    loadingDelegates: delegatesStore.loadingDelegates,
+    token: state.authStore.token
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    getDelegatesList: () => dispatch(delegatesActions.fetchDelegates())
+    getDelegatesList: token => dispatch(delegatesActions.fetchDelegates(token))
   }
 }
 

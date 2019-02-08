@@ -3,8 +3,14 @@ import './App.css'
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom'
 import HomePage from '../Home/Home'
 import DashboardPage from '../Dashboard/Dashboard'
+import * as actions from '../../Redux/Actions/authActions'
+import { connect } from 'react-redux'
 
 class App extends Component {
+  componentDidMount() {
+    this.props.onTryAutoSignOn()
+  }
+
   render() {
     return (
       <div className="App">
@@ -19,4 +25,13 @@ class App extends Component {
   }
 }
 
-export default App
+const mapDispatchToProps = dispatch => {
+  return {
+    onTryAutoSignOn: () => dispatch(actions.authCheckState())
+  }
+}
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(App)

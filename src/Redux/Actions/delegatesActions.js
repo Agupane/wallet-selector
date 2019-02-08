@@ -21,13 +21,17 @@ export const fetchDelegatesStart = () => {
   }
 }
 
-export const fetchDelegates = () => {
+export const fetchDelegates = token => {
   return async dispatch => {
     dispatch(fetchDelegatesStart())
     /** Here we should call API with axios **/
     try {
-      let delegates = await axios.get('/delegates.json')
-      dispatch(fetchDelegatesSuccess(delegates.data))
+      /** TODO -- Delete auth token once tested, not needed on the app **/
+      if (token) {
+        console.log('Fetching delegates with token ', token)
+        let delegates = await axios.get('/delegates.json?auth=' + token)
+        dispatch(fetchDelegatesSuccess(delegates.data))
+      }
     } catch (err) {
       dispatch(fetchDelegatesFail(err))
     }
