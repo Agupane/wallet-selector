@@ -17,9 +17,6 @@ const dashboardPage = props => {
   return (
     <>
       <h2>Welcome to dashboard Page!</h2>
-      <ModalContainer showModal title="Modal title" hideModal={() => console.log('hiding modal')}>
-        {modalContent}
-      </ModalContainer>
     </>
   )
 }

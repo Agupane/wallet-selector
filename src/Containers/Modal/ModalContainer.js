@@ -1,6 +1,7 @@
 import React from 'react'
 import './modal.css'
-import Button from '../../Components/Common/UI/Button/Button'
+import * as actions from '../../Redux/Actions/authActions'
+import { connect } from 'react-redux'
 
 const ModalContainer = props => {
   const { showModal, title, description, children, hideModal } = props
@@ -16,4 +17,23 @@ const ModalContainer = props => {
     )
   return null
 }
-export default ModalContainer
+
+/** Which values from the global state should be shown on the props of this component **/
+const mapStateToProps = state => {
+  const { modalStore } = state
+  return {
+    showModal: modalStore.showModal,
+    modalTitle: modalStore.modalTitle
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onAuth: (email, password, isSignUp) => dispatch(actions.auth(email, password, isSignUp))
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ModalContainer)
