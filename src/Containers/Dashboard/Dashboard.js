@@ -1,5 +1,4 @@
 import React from 'react'
-import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import logdown from 'logdown'
 
@@ -24,4 +23,4 @@ const mapStateToProps = state => {
 }
 
 /** React memo check if the props did change, in that case the functional component is re rendered **/
-export default connect(mapStateToProps)(withRouter(React.memo(dashboardPage)))
+export default connect(mapStateToProps)(dashboardPage)

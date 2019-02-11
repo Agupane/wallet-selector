@@ -9,9 +9,6 @@ const INITIAL_STATE = {
     currentNetwork: '',
     authenticated: false
   },
-  walletSelectorModal: {
-    show: false
-  },
   contract: {},
   pendingTransactions: [],
   errorTransaction: '',

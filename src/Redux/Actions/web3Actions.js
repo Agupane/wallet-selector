@@ -27,10 +27,13 @@ export const closeWalletSelector = () => {
   }
 }
 /** Sets userAccountData asynchronously **/
-export const setUserAccountData = userData => {
+export const setUserAccountData = (userData, callback) => {
   return dispatch => {
     setTimeout(() => {
       dispatch(saveUserAccountData(userData))
+      if (callback) {
+        callback()
+      }
     }, 2000)
   }
 }

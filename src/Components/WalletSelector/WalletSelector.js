@@ -1,10 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import metamaskProvider from '../../Utils/Web3Provider/MetamaskProvider'
 import logdown from 'logdown'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import * as actionCreators from '../../Redux/Actions/web3Actions'
-import Spinner from '../Common/UI/Spinner/Spinner'
 const logger = logdown('WalletSelector:MetamaskProvider')
 logger.state.isEnabled = process.env.NODE_ENV !== 'production'
 
@@ -14,124 +13,102 @@ const supportedWallets = {
   TREZOR: 'trezor'
 }
 
-class WalletSelector extends Component {
-  state = {
-    authenticating: false
-  }
-
-  selectWallet = async walletType => {
+const walletSelector = props => {
+  const selectWallet = async walletType => {
     switch (walletType) {
       case supportedWallets.METAMASK: {
         await metamaskProvider.connect(
           (web3, userData) => {
             logger.log('User has been connected with web3 instance: ', web3)
             logger.log('User has the following data: ', userData)
-            this.finishAuthentication(true, () => {
-              this.updateReduxState(web3, userData)
-              this.props.history.push('/dashboard')
+            updateReduxState(web3, userData, () => {
+              props.closeModal()
+              props.history.push('/myAccount')
             })
           },
           userData => {
             logger.log('User data updated: ', userData)
-            this.updateReduxState(null, userData)
+            updateReduxState(null, userData)
           },
           error => {
             logger.error(error)
-            this.finishAuthentication(false)
+            finishAuthentication(false)
           }
         )
         break
       }
       case supportedWallets.LEDGER: {
-        this.finishAuthentication(false)
+        finishAuthentication(false)
         break
       }
       case supportedWallets.TREZOR: {
-        this.finishAuthentication(false)
+        finishAuthentication(false)
         break
       }
       default: {
-        this.finishAuthentication(false)
+        finishAuthentication(false)
         break
       }
     }
   }
 
-  startAuthentication = walletType => {
+  const startAuthentication = walletType => {
     logger.log('Starting authentication with wallet: ', walletType)
-    this.setState(
-      {
-        authenticating: true
-      },
-      () => {
-        this.selectWallet(walletType)
-      }
-    )
+    props.showLoadSpinner(true, () => {
+      selectWallet(walletType)
+    })
   }
 
-  finishAuthentication = (success, callback) => {
+  const finishAuthentication = (success, callback) => {
     logger.log('Finished authentication with success: ', success)
-    this.setState(
-      {
-        authenticating: false
-      },
-      () => {
-        if (success) {
-          console.log('Authentication successful')
-        } else {
-          console.error('Authentication failed')
-        }
-        if (callback) {
-          callback()
-        }
+    props.showLoadSpinner(false, () => {
+      /** TODO MANAGE ERROR OR SUCCESS **/
+      if (success) {
+        console.log('Authentication successful')
+      } else {
+        console.error('Authentication failed')
       }
-    )
+      if (callback) {
+        callback()
+      }
+    })
   }
 
-  updateReduxState = (web3, userData) => {
+  const updateReduxState = (web3, userData, callback) => {
     logger.log('Updating redux state')
     if (web3) {
-      this.props.setWeb3Instance(web3)
+      props.setWeb3Instance(web3)
     }
     if (userData) {
       console.log('setting user account data')
-      this.props.setUserAccountData(userData)
+      props.setUserAccountData(userData, callback)
     }
   }
 
-  render() {
-    let content = <Spinner />
-    if (!this.state.authenticating) {
-      content = (
-        <>
-          <button
-            color="primary"
-            onClick={() => this.startAuthentication(supportedWallets.METAMASK)}
-          >
-            Metamask
-          </button>
-          <button color="primary" onClick={() => this.startAuthentication(supportedWallets.LEDGER)}>
-            Ledger
-          </button>
-          <button color="primary" onClick={() => this.startAuthentication(supportedWallets.TREZOR)}>
-            Trezor
-          </button>
-        </>
-      )
-    }
-    return content
-  }
+  return (
+    <>
+      <button color="primary" onClick={() => startAuthentication(supportedWallets.METAMASK)}>
+        Metamask
+      </button>
+      <button color="primary" onClick={() => startAuthentication(supportedWallets.LEDGER)}>
+        Ledger
+      </button>
+      <button color="primary" onClick={() => startAuthentication(supportedWallets.TREZOR)}>
+        Trezor
+      </button>
+    </>
+  )
 }
 
 /** Which actions are executable in this component **/
 const mapDispatchToProps = dispatch => {
   return {
     setWeb3Instance: web3Instance => dispatch(actionCreators.setWeb3Instance(web3Instance)),
-    setUserAccountData: userData => dispatch(actionCreators.setUserAccountData(userData))
+    setUserAccountData: (userData, cb) => dispatch(actionCreators.setUserAccountData(userData, cb))
   }
 }
 
 export default connect(
   null,
   mapDispatchToProps
-)(withRouter(WalletSelector))
+)(withRouter(walletSelector))

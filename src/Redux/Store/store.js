@@ -14,7 +14,7 @@ logger.state.isEnabled = process.env.NODE_ENV !== 'production'
 const loggerMiddleware = store => {
   return next => {
     return action => {
-      // logger.log('Dispatching', action)
+      logger.log('Dispatching', action)
       const result = next(action)
       //logger.log('Next state', store.getState())
       return result

@@ -7,7 +7,7 @@ import DelegatesList from '../../Components/DelegatesList/DelegatesList'
 const logger = logdown('WalletSelector:Delegates')
 logger.state.isEnabled = process.env.NODE_ENV !== 'production'
 
-const delegatesContainerPage = props => {
+const delegatesPage = props => {
   return (
     <>
       <h2>Welcome to Delegates List Page!</h2>
@@ -26,4 +26,4 @@ const mapStateToProps = state => {
 }
 
 /** React memo check if the props did change, in that case the functional component is re rendered **/
-export default connect(mapStateToProps)(withRouter(React.memo(delegatesContainerPage)))
+export default connect(mapStateToProps)(withRouter(React.memo(delegatesPage)))
