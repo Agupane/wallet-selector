@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import DelegatesContainer from '../Delegates/DelegatesContainer'
 import Header from '../../Components/Header/Header'
 import Auth from '../../Components/Auth/Auth'
-import ModalContainer from '../Modal/ModalContainer'
+import ModalWallet from '../ModalWallet/ModalWallet'
 
 class App extends Component {
   componentDidMount() {
@@ -20,7 +20,7 @@ class App extends Component {
       <Router>
         <div className="App">
           <Header />
-          <ModalContainer />
+          <ModalWallet />
           <Switch>
             <Route exact path="/" component={HomePage} />
             <Route exact path="/dashboard" component={DashboardPage} />

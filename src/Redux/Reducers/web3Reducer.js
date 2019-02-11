@@ -1,5 +1,5 @@
-import * as actionTypes from '../Actions/web3Actions'
 import { updateObject } from '../../Utils/reduxUtilitys'
+import * as actionTypes from '../Actions/ActionTypes/web3ActionTypes'
 
 const INITIAL_STATE = {
   web3: {},
@@ -8,6 +8,9 @@ const INITIAL_STATE = {
     ethBalance: '0',
     currentNetwork: '',
     authenticated: false
+  },
+  walletSelectorModal: {
+    show: false
   },
   contract: {},
   pendingTransactions: [],

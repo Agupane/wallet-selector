@@ -2,18 +2,11 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import logdown from 'logdown'
-import ModalContainer from '../Modal/ModalContainer'
 
 const logger = logdown('WalletSelector:Dashboard')
 logger.state.isEnabled = process.env.NODE_ENV !== 'production'
 
 const dashboardPage = props => {
-  let modalContent = (
-    <div>
-      This deploy was started with account but the current account is. Please select the original
-      account to continue with the deploy. If you don't want to continue with that deploy
-    </div>
-  )
   return (
     <>
       <h2>Welcome to dashboard Page!</h2>

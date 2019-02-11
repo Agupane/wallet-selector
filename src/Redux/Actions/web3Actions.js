@@ -1,21 +1,31 @@
-export const SET_USER_ACCOUNT_DATA = 'SET_USER_ACCOUNT_DATA'
-export const SET_WEB3_INSTANCE = 'SET_WEB3_INSTANCE'
+import * as actionTypes from './ActionTypes/web3ActionTypes'
 
 /** Sets userAccountData Synchronously **/
 export const saveUserAccountData = userData => {
   return {
-    type: SET_USER_ACCOUNT_DATA,
+    type: actionTypes.SET_USER_ACCOUNT_DATA,
     payload: userData
   }
 }
 
 export const setWeb3Instance = web3 => {
   return {
-    type: SET_WEB3_INSTANCE,
+    type: actionTypes.SET_WEB3_INSTANCE,
     payload: web3
   }
 }
 
+export const openWalletSelector = () => {
+  return {
+    type: actionTypes.WALLET_SELECTOR_OPEN
+  }
+}
+
+export const closeWalletSelector = () => {
+  return {
+    type: actionTypes.WALLET_SELECTOR_CLOSE
+  }
+}
 /** Sets userAccountData asynchronously **/
 export const setUserAccountData = userData => {
   return dispatch => {
