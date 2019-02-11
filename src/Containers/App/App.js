@@ -5,6 +5,9 @@ import HomePage from '../Home/Home'
 import DashboardPage from '../Dashboard/Dashboard'
 import * as actions from '../../Redux/Actions/authActions'
 import { connect } from 'react-redux'
+import DelegatesContainer from '../Delegates/DelegatesContainer'
+import Header from '../../Components/Header/Header'
+import Auth from '../../Components/Auth/Auth'
 
 class App extends Component {
   componentDidMount() {
@@ -13,14 +16,18 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <Router>
+      <Router>
+        <div className="App">
+          <Header />
           <Switch>
             <Route exact path="/" component={HomePage} />
             <Route exact path="/dashboard" component={DashboardPage} />
+            <Route exact path="/delegates" component={DelegatesContainer} />
+            /** TODO DELETE **/
+            <Route exact path="/auth" component={Auth} />
           </Switch>
-        </Router>
-      </div>
+        </div>
+      </Router>
     )
   }
 }

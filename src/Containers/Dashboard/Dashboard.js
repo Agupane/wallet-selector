@@ -2,25 +2,24 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import logdown from 'logdown'
-import DelegatesList from '../../Components/DelegatesList/DelegatesList'
-import Auth from '../Auth/Auth'
+import ModalContainer from '../Modal/ModalContainer'
 
 const logger = logdown('WalletSelector:Dashboard')
 logger.state.isEnabled = process.env.NODE_ENV !== 'production'
 
 const dashboardPage = props => {
-  const backToHome = () => {
-    props.history.push('/')
-  }
-
+  let modalContent = (
+    <div>
+      This deploy was started with account but the current account is. Please select the original
+      account to continue with the deploy. If you don't want to continue with that deploy
+    </div>
+  )
   return (
     <>
       <h2>Welcome to dashboard Page!</h2>
-      <button color="primary" onClick={() => backToHome()}>
-        Back to home
-      </button>
-      <DelegatesList />
-      <Auth />
+      <ModalContainer showModal title="Modal title" hideModal={() => console.log('hiding modal')}>
+        {modalContent}
+      </ModalContainer>
     </>
   )
 }

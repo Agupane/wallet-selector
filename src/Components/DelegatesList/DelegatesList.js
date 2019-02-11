@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom'
 import * as delegatesActions from '../../Redux/Actions/delegatesActions'
 import logdown from 'logdown'
 import Spinner from '../Common/UI/Spinner/Spinner'
-const logger = logdown('WalletSelector:DelegatesList')
+const logger = logdown('WalletSelector:Delegates')
 logger.state.isEnabled = process.env.NODE_ENV !== 'production'
 
 const delegatesList = props => {

@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import classes from './Auth.css'
-import Button from '../../Components/Common/UI/Button/Button'
-import Input from '../../Components/Common/UI/Input/Input'
+import Button from '../Common/UI/Button/Button'
+import Input from '../Common/UI/Input/Input'
 import * as actions from '../../Redux/Actions/authActions'
-import Spinner from '../../Components/Common/UI/Spinner/Spinner'
+import Spinner from '../Common/UI/Spinner/Spinner'
 
 class Auth extends Component {
   state = {
