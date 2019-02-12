@@ -1,7 +1,6 @@
-import React, { Component } from 'react'
+import React from 'react'
 import './App.css'
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom'
-import { connect } from 'react-redux'
 /** Pages **/
 import HomePage from '../Home/Home'
 import DashboardPage from '../Dashboard/Dashboard'
@@ -12,39 +11,20 @@ import ModalWallet from '../ModalWallet/ModalWallet'
 import Header from '../../Components/Header/Header'
 import Redirect from 'react-router/es/Redirect'
 
-class App extends Component {
-  componentDidMount() {
-    //  this.props.onTryAutoSignOn()
-  }
+const App = () => (
+  <Router>
+    <div className="App">
+      <Header />
+      <ModalWallet />
+      <Switch>
+        <Route exact path="/" component={HomePage} />
+        <Route exact path="/dashboard" component={DashboardPage} />
+        <Route exact path="/delegates" component={DelegatesPage} />
+        <Route exact path="/myAccount" component={MyAccountPage} />
+        <Redirect to="/" />
+      </Switch>
+    </div>
+  </Router>
+)
 
-  render() {
-    return (
-      <Router>
-        <div className="App">
-          <Header />
-          <ModalWallet />
-          <Switch>
-            <Route exact path="/" component={HomePage} />
-            <Route exact path="/dashboard" component={DashboardPage} />
-            <Route exact path="/delegates" component={DelegatesPage} />
-            <Route exact path="/myAccount" component={MyAccountPage} />
-            <Redirect to="/" />
-          </Switch>
-        </div>
-      </Router>
-    )
-  }
-}
-
-/*
-const mapDispatchToProps = dispatch => {
-  return {
-    onTryAutoSignOn: () => dispatch(actions.authCheckState())
-  }
-}
-*/
-
-export default connect(
-  null,
-  null
-)(App)
+export default App
