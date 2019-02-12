@@ -59,19 +59,10 @@ const walletSelector = props => {
     })
   }
 
-  const finishAuthentication = (success, callback) => {
+  const finishAuthentication = success => {
     logger.log('Finished authentication with success: ', success)
-    props.showLoadSpinner(false, () => {
-      /** TODO MANAGE ERROR OR SUCCESS **/
-      if (success) {
-        console.log('Authentication successful')
-      } else {
-        console.error('Authentication failed')
-      }
-      if (callback) {
-        callback()
-      }
-    })
+    /** TODO MANAGE error **/
+    success ? props.showLoadSpinner(false) : props.showLoadSpinner(false)
   }
 
   const updateReduxState = (web3, userData, callback) => {

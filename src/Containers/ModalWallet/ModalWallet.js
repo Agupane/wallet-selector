@@ -5,7 +5,7 @@ import WalletSelector from '../../Components/WalletSelector/WalletSelector'
 import Modal from 'react-responsive-modal'
 import logdown from 'logdown'
 import * as actionUiCreators from '../../Redux/Actions/uiActions'
-import Loader from 'react-loader-spinner'
+import Spinner from '../../Components/Common/UI/Spinner/Spinner'
 const logger = logdown('WalletSelector:ModalWallet')
 logger.state.isEnabled = process.env.NODE_ENV !== 'production'
 
@@ -15,7 +15,7 @@ class ModalWallet extends Component {
   }
 
   showLoadSpinner = (show, callback) => {
-    console.log('showing spinner ', show, callback)
+    console.log('showing spinner ', show)
     this.setState(
       {
         showSpinner: show
@@ -30,20 +30,16 @@ class ModalWallet extends Component {
 
   render() {
     let { showModal } = this.props
-    let walletContent = <Loader type="Oval" color="#00BFFF" height="100" width="100" />
-    if (!this.state.showSpinner) {
-      walletContent = (
-        <WalletSelector
-          showLoadSpinner={(show, callback) => this.showLoadSpinner(show, callback)}
-          closeModal={() => this.props.closeModal()}
-        />
-      )
-    }
     return (
-      <Modal open={showModal} onClose={() => logger.log('Wallet selector closed')} center>
+      <Modal open={showModal} onClose={() => this.props.closeModal()} center>
         <h1>Connect a Wallet</h1>
         <h3>Get started by connecting one of the wallets bellow</h3>
-        {walletContent}
+        <Spinner showSpinner={this.state.showSpinner}>
+          <WalletSelector
+            showLoadSpinner={(show, callback) => this.showLoadSpinner(show, callback)}
+            closeModal={() => this.props.closeModal()}
+          />
+        </Spinner>
       </Modal>
     )
   }
@@ -59,8 +55,7 @@ const mapStateToProps = state => {
 /** Which actions are executable in this component **/
 const mapDispatchToProps = dispatch => {
   return {
-    closeModal: () => dispatch(actionUiCreators.closeWalletSelector()),
-    showLoadingSpinner: show => dispatch(actionUiCreators.showLoadingSpinner(show))
+    closeModal: () => dispatch(actionUiCreators.closeWalletSelector())
   }
 }
 export default connect(

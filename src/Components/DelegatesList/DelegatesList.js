@@ -28,8 +28,7 @@ const delegatesList = props => {
       ))}
     </>
   ) : null
-
-  return props.loadingDelegates ? <Spinner /> : delegatesListJSX
+  return <Spinner showSpinner={props.loadingDelegates}>{delegatesListJSX}</Spinner>
 }
 
 /** Which values from the global state should be shown on the props of this component **/
@@ -37,8 +36,7 @@ const mapStateToProps = state => {
   const { delegatesStore } = state
   return {
     delegates: delegatesStore.delegates,
-    loadingDelegates: delegatesStore.loadingDelegates,
-    token: state.authStore.token
+    loadingDelegates: delegatesStore.loadingDelegates
   }
 }
 
